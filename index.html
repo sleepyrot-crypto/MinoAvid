@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مینوآوید</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg: #03040c;
+            --panel: rgba(13, 16, 35, 0.72);
+            --panel-light: rgba(24, 27, 52, 0.72);
+            --text: #f2f2fb;
+            --muted: #8d91ae;
+            --purple: #8178ff;
+            --purple-light: #aaa4ff;
+            --cyan: #65dff2;
+            --border: rgba(255,255,255,0.08);
+            --radius: 22px;
+            --danger: #ff4757;
+            --gold: #FFD700;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            user-select: none;
+        }
+
+        input, textarea, select, [contenteditable="true"] {
+            user-select: text;
+        }
+
+        html, body { width: 100%; min-height: 100%; }
+        body {
+            font-family: "Vazirmatn", sans-serif;
+            background: radial-gradient(circle at 80% 5%, rgba(93,72,255,0.18), transparent 35%),
+                        radial-gradient(circle at 10% 85%, rgba(0,190,220,0.10), transparent 35%),
+                        #03040c;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .space { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--duration) infinite alternate; }
+        @keyframes twinkle { from { opacity: 0.15; transform: scale(0.7); } to { opacity: 0.9; transform: scale(1.4); } }
+
+        .app { position: relative; z-index: 2; width: 100%; max-width: 520px; min-height: 100vh; margin: auto; padding: 20px 18px 120px; }
+
+        .bismillah {
+            text-align: center;
+            font-family: 'IranNastaliq', 'Aref Ruqaa', 'Vazirmatn', serif;
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFE79A 0%, #FFAE34 50%, #ED8F03 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 18px;
+            filter: drop-shadow(0 0 12px rgba(255, 180, 50, 0.25));
+            line-height: 1.6;
+        }
+
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo { width: 45px; height: 45px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 23px; background: radial-gradient(circle at 35% 30%, #c3c0ff, #7168dc 45%, #17162f); box-shadow: 0 0 30px rgba(126,117,255,0.35); border: 1px solid rgba(255,255,255,0.12); overflow: hidden; position: relative; cursor: pointer; }
+        .logo img { width: 100%; height: 100%; object-fit: cover; }
+        .brand { font-size: 18px; font-weight: 700; }
+        .date-time-widget { text-align: left; font-size: 10px; color: var(--muted); background: var(--panel); padding: 6px 12px; border-radius: 12px; border: 1px solid var(--border); }
+        .live-time { font-size: 13px; font-weight: 600; color: var(--cyan); }
+
+        .hero { position: relative; text-align: center; padding: 15px 15px 20px; }
+        .planet-orbit { 
+            width: 160px; 
+            height: 160px; 
+            margin: 0 auto 15px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            position: relative;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(255,215,0,0.2) 0%, rgba(255,165,0,0.1) 30%, rgba(255,140,0,0.05) 50%, transparent 70%),
+                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            box-shadow: 
+                0 0 40px rgba(255,215,0,0.4),
+                0 0 80px rgba(255,165,0,0.25),
+                0 0 120px rgba(255,140,0,0.15),
+                0 0 160px rgba(255,120,0,0.1),
+                inset 0 0 60px rgba(255,215,0,0.2),
+                inset 0 0 120px rgba(255,165,0,0.1);
+            animation: goldGlow 2.5s ease-in-out infinite;
+            border: 2px solid rgba(255,215,0,0.3);
+        }
+        .planet-orbit::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,215,0,0.2);
+            animation: ringPulse 3s ease-in-out infinite;
+        }
+        .planet-orbit::after {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+        }
+        .planet { 
+            font-size: 52px; 
+            font-weight: 700; 
+            color: var(--gold);
+            text-shadow: 
+                0 0 10px rgba(255,215,0,0.9),
+                0 0 20px rgba(255,215,0,0.7),
+                0 0 40px rgba(255,165,0,0.5),
+                0 0 80px rgba(255,140,0,0.3),
+                0 0 120px rgba(255,120,0,0.2);
+            font-family: 'Aref Ruqaa', 'Vazirmatn', serif;
+            animation: yaAliGlow 2s ease-in-out infinite;
+            line-height: 1;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(135deg, #FFE79A 0%, #FFD700 30%, #FFAE34 60%, #ED8F03 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        @keyframes goldGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 40px rgba(255,215,0,0.4),
+                    0 0 80px rgba(255,165,0,0.25),
+                    0 0 120px rgba(255,140,0,0.15),
+                    inset 0 0 60px rgba(255,215,0,0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 60px rgba(255,215,0,0.6),
+                    0 0 120px rgba(255,165,0,0.4),
+                    0 0 180px rgba(255,140,0,0.25),
+                    0 0 240px rgba(255,120,0,0.15),
+                    inset 0 0 80px rgba(255,215,0,0.3);
+            }
+        }
+        @keyframes ringPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        @keyframes yaAliGlow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 15px rgba(255,215,0,0.8)) drop-shadow(0 0 30px rgba(255,165,0,0.5));
+            }
+            50% { 
+                filter: drop-shadow(0 0 25px rgba(255,215,0,1)) drop-shadow(0 0 50px rgba(255,165,0,0.7)) drop-shadow(0 0 75px rgba(255,140,0,0.4));
+            }
+        }
+
+        .search { height: 48px; display: flex; align-items: center; gap: 10px; padding: 0 16px; background: rgba(10,13,28,0.75); border: 1px solid var(--border); border-radius: 17px; margin-bottom: 22px; }
+        .search input { width: 100%; border: none; background: transparent; color: white; font-family: inherit; font-size: 11px; }
+
+        .categories { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; }
+        .category { 
+            position: relative;
+            min-height: 98px; 
+            border: 1px solid var(--border); 
+            border-radius: 18px; 
+            background: linear-gradient(145deg, rgba(20,23,48,0.8), rgba(8,10,22,0.85)); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            overflow: hidden;
+            padding: 6px;
+        }
+        .category:active { transform: scale(0.95); }
+        .category-bg-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+        .category:hover .category-bg-img { opacity: 0.5; }
+        .category-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .category-icon { font-size: 20px; margin-bottom: 4px; }
+        .category-name { font-size: 10px; font-weight: 600; text-align: center; }
+
+        .dhikr-section { margin-top: 20px; padding: 20px; border-radius: 22px; background: rgba(15, 18, 40, 0.7); border: 1px solid var(--border); text-align: center; }
+        .dhikr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .dhikr-title { font-size: 12px; color: var(--purple-light); }
+        .dhikr-text { font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #fff; line-height: 1.6; }
+        .counter-btn { width: 95px; height: 95px; border-radius: 50%; border: 2px solid var(--purple); background: radial-gradient(circle, rgba(129,120,255,0.2), transparent); color: white; font-size: 28px; font-weight: 700; cursor: pointer; transition: 0.1s; margin: auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(129,120,255,0.2); }
+        .counter-btn:active { transform: scale(0.92); background: rgba(129,120,255,0.4); }
+        .counter-btn.completed { border-color: var(--cyan); box-shadow: 0 0 30px rgba(101,223,242,0.4); }
+        
+        .progress-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; margin: 15px 0 8px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--purple), var(--cyan)); transition: width 0.3s ease; }
+        
+        .dhikr-stats { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-bottom: 15px; flex-wrap: wrap; gap: 5px; }
+        .dhikr-stats span { background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 8px; }
+        .dhikr-controls { display: flex; justify-content: space-between; align-items: center; }
+        .btn-sm { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 10px; font-size: 10px; cursor: pointer; font-family: inherit; }
+        .reset-btn { background: transparent; border: none; color: #ff6b6b; cursor: pointer; font-family: inherit; font-size: 10px; }
+
+        .bottom-nav { position: fixed; z-index: 10; bottom: 12px; left: 50%; transform: translateX(-50%); width: min(calc(100% - 25px), 490px); padding: 8px 10px; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(8,10,20,0.88); border: 1px solid rgba(255,255,255,0.12); border-radius: 24px; backdrop-filter: blur(25px); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .nav-item { border: none; background: transparent; color: #73789b; font-family: inherit; font-size: 10px; padding: 8px 4px; cursor: pointer; border-radius: 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.25s ease; }
+        .nav-item svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.2s ease, fill 0.2s ease; }
+        .nav-item span { display: block; font-size: 9px; font-weight: 500; }
+        .nav-item.active { color: #a49eff; background: rgba(129,120,255,0.12); font-weight: 600; }
+        .nav-item.active svg { transform: translateY(-1px) scale(1.1); fill: var(--cyan); filter: drop-shadow(0 0 6px rgba(101,223,242,0.4)); }
+
+        .modal { 
+            position: fixed; 
+            inset: 0; 
+            z-index: 1000; 
+            background: rgba(3, 4, 12, 0.75); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+        }
+        .modal.show { 
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content { 
+            width: 100%; 
+            max-width: 440px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            padding: 26px 22px; 
+            border-radius: 28px; 
+            background: linear-gradient(165deg, rgba(20, 24, 52, 0.95), rgba(10, 12, 26, 0.98)); 
+            border: 1px solid rgba(129, 120, 255, 0.25); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(129, 120, 255, 0.15); 
+            transform: scale(0.88) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+        .modal.show .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        
+        .modal-close-btn {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            z-index: 5;
+        }
+        .modal-close-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+
+        .modal-header-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--purple-light);
+            text-align: center;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .admin-input { 
+            width: 100%; 
+            padding: 12px 14px; 
+            margin: 8px 0; 
+            background: rgba(255,255,255,0.04); 
+            border: 1px solid rgba(255,255,255,0.12); 
+            border-radius: 14px; 
+            color: white; 
+            font-family: inherit; 
+            font-size: 12px; 
+            transition: 0.2s;
+        }
+        .admin-input:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 15px rgba(129,120,255,0.25);
+            background: rgba(255,255,255,0.07);
+        }
+
+        .admin-btn { 
+            width: 100%; 
+            padding: 13px; 
+            background: linear-gradient(135deg, var(--purple) 0%, #6155f5 100%); 
+            border: none; 
+            border-radius: 14px; 
+            color: white; 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-top: 12px; 
+            font-family: inherit; 
+            font-size: 12px; 
+            box-shadow: 0 4px 20px rgba(129,120,255,0.3);
+            transition: 0.2s;
+        }
+        .admin-btn:active { transform: scale(0.98); }
+        
+        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); box-shadow: none; }
+        .btn-danger { background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%); box-shadow: 0 4px 15px rgba(255,71,87,0.3); }
+
+        .editor-toolbar { display: flex; gap: 6px; flex-wrap: wrap; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 12px; border: 1px solid var(--border); margin-top: 8px; align-items: center; }
+        .editor-btn { background: rgba(255,255,255,0.08); border: none; color: white; padding: 5px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; transition: 0.2s; }
+        .editor-btn:hover { background: rgba(255,255,255,0.18); }
+        .editor-box { width: 100%; min-height: 100px; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px; color: white; font-family: inherit; font-size: 12px; margin-top: 8px; outline: none; overflow-y: auto; }
+        .editor-box img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px auto; display: block; }
+        .dhikr-box { 
+            background: linear-gradient(135deg, rgba(129,120,255,0.15), rgba(101,223,242,0.1)); 
+            border: 1px solid rgba(129,120,255,0.3); 
+            border-radius: 12px; 
+            padding: 15px; 
+            margin: 10px 0; 
+            text-align: center; 
+            font-family: 'Aref Ruqaa', serif; 
+            font-size: 18px; 
+            color: var(--gold); 
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        .img-preview { width: 100%; max-height: 130px; object-fit: cover; border-radius: 14px; margin-top: 10px; border: 1px solid var(--border); display: none; }
+        
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: rgba(18, 22, 48, 0.95); border: 1px solid var(--purple); color: white; padding: 10px 22px; border-radius: 30px; font-size: 11px; z-index: 2000; transition: 0.3s ease; opacity: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        .content-card { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 14px; padding: 15px; margin-bottom: 12px; }
+        .content-card h4 { font-size: 14px; margin-bottom: 8px; color: var(--purple-light); }
+        .content-card .content-body { font-size: 12px; line-height: 1.8; color: var(--text); }
+        .content-card .content-body img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }
+        .content-card .content-featured-img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+
+        .delete-btn { background: var(--danger); border: none; color: white; padding: 4px 10px; border-radius: 6px; font-size: 10px; cursor: pointer; font-family: inherit; }
+        .delete-btn:hover { opacity: 0.8; }
+
+        .sub-cat-btn { background: var(--panel-light); border: 1px solid var(--border); padding: 6px 12px; border-radius: 12px; font-size: 11px; cursor: pointer; color: var(--text); display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .sub-cat-btn:hover { background: rgba(129,120,255,0.2); }
+        .sub-cat-btn img { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; }
+
+        .loading-spinner { text-align: center; padding: 20px; color: var(--muted); font-size: 12px; }
+        .loading-spinner::after { content: '...'; animation: dots 1.5s infinite; }
+        @keyframes dots { 0% { content: '.'; } 33% { content: '..'; } 66% { content: '...'; } }
+    </style>
+</head>
+<body>
+
+    <div class="space" id="space"></div>
+    <div class="toast" id="toast"></div>
+
+    <main class="app">
+        <div class="bismillah">بسم الله الرحمن الرحیم</div>
+
+        <header class="header">
+            <div class="logo-area">
+                <div class="logo" id="siteLogoContainer">
+                    <span id="siteLogoIcon">✦</span>
+                    <img id="siteLogoImg" src="" style="display:none;" alt="لوگو">
+                </div>
+                <div>
+                    <div class="brand">مینو آوید</div>
+                    <div style="font-size: 9px; color: var(--muted);">نسخه 0.1</div>
+                </div>
+            </div>
+            <div class="date-time-widget">
+                <div class="live-time" id="liveTime">00:00:00</div>
+                <div id="liveDate">در حال دریافت...</div>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="planet-orbit" id="planetOrbit">
+                <div class="planet">یا علی</div>
+            </div>
+            <h1>آن‌سوی پرده، جهانی دیگر است</h1>
+            <h1>با تشکر از استاد کاوه عزیز و برای قدردانی از جواهرات لسانی و عملی ایشان برای انسان</h1>
+        </section>
+
+        <div class="search">
+            <input id="searchInput" type="text" placeholder="جست‌وجو در مطالب، اذکار و مفاهیم...">
+        </div>
+
+        <section>
+            <div class="categories" id="categoriesContainer">
+                <div class="loading-spinner">در حال بارگذاری</div>
+            </div>
+        </section>
+
+        <section class="dhikr-section">
+            <div class="dhikr-header">
+                <span class="dhikr-title" id="dhikrTitleDisplay">✦ ذکر فعال</span>
+                <button class="btn-sm" id="changeDhikrBtn">تغییر ذکر / هدف</button>
+            </div>
+            <div class="dhikr-text" id="dhikrTextDisplay">لا إِلهَ إِلَّا اللَّهُ</div>
+            
+            <div class="counter-btn" id="counterBtn">0</div>
+
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="dhikrProgressBar"></div>
+            </div>
+
+            <div class="dhikr-stats">
+                <span id="dhikrProgressText">پیشرفت: ۰٪</span>
+                <span id="dhikrGoalInfo">هدف: ۱۰۰ ذکر در ۱ روز</span>
+                <span id="dhikrDayCounter">روز: ۱</span>
+            </div>
+
+            <div class="dhikr-controls">
+                <button class="reset-btn" id="resetDhikrBtn">بازنشانی ذکر</button>
+                <span id="dhikrDailyPace" style="font-size:10px; color:var(--cyan);">پیشنهاد روزانه: ۱۰۰</span>
+            </div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="app.switchTab(event, 'home')">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>خانه</span>
+        </button>
+        <button class="nav-item" onclick="app.switchTab(event, 'quotes')">
+            <svg viewBox="0 0 24 24"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+            <span>گفته‌ها</span>
+        </button>
+        <button class="nav-item" onclick="app.switchTab(event, 'adhkar')">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm1-13h-2v6l5.2 3.2.8-1.3-4.5-2.7z"/></svg>
+            <span>اذکار</span>
+        </button>
+        <button class="nav-item" onclick="app.switchTab(event, 'concepts')">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 3.87 2.19 7.23 5.4 8.93L7.4 22h9.2l.01-1.07C19.81 19.23 22 15.87 22 12c0-5.52-4.48-10-10-10zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 3.59 8 8 8-3.59 8-8 8z"/></svg>
+            <span>مفاهیم</span>
+        </button>
+    </nav>
+
+    <div class="modal" id="appModal">
+        <div class="modal-content" id="modalBody">
+            <!-- Dynamic Content -->
+        </div>
+    </div>
+
+<script>
+/* =========================================================
+   CONFIG
+========================================================= */
+const CONFIG = {
+    API_BASE: '/api',
+    ADMIN_ENDPOINT: '/api/auth',
+    LOGO_STORAGE_KEY: 'site_logo_global_v1',
+    DHIKR_STORAGE_KEY: 'dhikr_goal_v4'
+};
+
+/* =========================================================
+   API SERVICE LAYER
+========================================================= */
+class ApiService {
+    static async fetchAPI(endpoint, options = {}) {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('API call failed:', error);
+            throw error;
+        }
+    }
+
+    static async getCategories() {
+        return this.fetchAPI('/categories');
+    }
+
+    static async addCategory(category) {
+        return this.fetchAPI('/categories', {
+            method: 'POST',
+            body: JSON.stringify(category)
+        });
+    }
+
+    static async deleteCategory(id) {
+        return this.fetchAPI('/categories', {
+            method: 'DELETE',
+            body: JSON.stringify({ id })
+        });
+    }
+
+    static async getContents(categoryId = null, search = null) {
+        let query = '';
+        if (categoryId) query = `?category_id=${categoryId}`;
+        if (search) query = `?search=${encodeURIComponent(search)}`;
+        return this.fetchAPI(`/contents${query}`);
+    }
+
+    static async addContent(content) {
+        return this.fetchAPI('/contents', {
+            method: 'POST',
+            body: JSON.stringify(content)
+        });
+    }
+
+    static async deleteContent(id) {
+        return this.fetchAPI('/contents', {
+            method: 'DELETE',
+            body: JSON.stringify({ id })
+        });
+    }
+
+    static async getAdhkar() {
+        return this.fetchAPI('/adhkar');
+    }
+
+    static async addAdhkar(adhkar) {
+        return this.fetchAPI('/adhkar', {
+            method: 'POST',
+            body: JSON.stringify(adhkar)
+        });
+    }
+
+    static async deleteAdhkar(id) {
+        return this.fetchAPI('/adhkar', {
+            method: 'DELETE',
+            body: JSON.stringify({ id })
+        });
+    }
+
+    static async verifyAdmin(token) {
+        return this.fetchAPI('/auth', {
+            method: 'POST',
+            body: JSON.stringify({ token })
+        });
+    }
+}
+
+/* =========================================================
+   MAIN APP
+========================================================= */
+class App {
+    constructor() {
+        this.categories = [];
+        this.contents = {};
+        this.adhkar = [];
+        this.categoryImage = null;
+        this.featuredImage = null;
+        this.init();
+    }
+
+    async init() {
+        this.renderLogo();
+        this.startClock();
+        this.generateStars();
+        this.setupEventListeners();
+        await this.loadData();
+        this.checkDailyReset();
+        this.renderDhikr();
+    }
+
+    async loadData() {
+        try {
+            this.categories = await ApiService.getCategories();
+            this.adhkar = await ApiService.getAdhkar();
+            
+            for (const cat of this.categories) {
+                this.contents[cat.id] = await ApiService.getContents(cat.id);
+            }
+            
+            this.renderCategories();
+        } catch (error) {
+            console.error('Failed to load data:', error);
+            this.showToast('خطا در بارگذاری داده‌ها');
+            document.getElementById("categoriesContainer").innerHTML = '<div class="loading-spinner">خطا در اتصال به سرور</div>';
+        }
+    }
+
+    /* ---------- CLOCK ---------- */
+    startClock() {
+        const updateClock = () => {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('liveTime').textContent = `${hours}:${minutes}:${seconds}`;
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('liveDate').textContent = new Intl.DateTimeFormat('fa-IR', options).format(now);
+        };
+        setInterval(updateClock, 1000);
+        updateClock();
+    }
+
+    /* ---------- STARS ---------- */
+    generateStars() {
+        const space = document.getElementById("space");
+        for (let i = 0; i < 90; i++) {
+            const star = document.createElement("div");
+            star.className = "star";
+            star.style.left = Math.random() * 100 + "%";
+            star.style.top = Math.random() * 100 + "%";
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + "px";
+            star.style.height = size + "px";
+            star.style.setProperty("--duration", (Math.random() * 4 + 2) + "s");
+            space.appendChild(star);
+        }
+    }
+
+    /* ---------- LOGO ---------- */
+    renderLogo() {
+        const savedLogo = localStorage.getItem(CONFIG.LOGO_STORAGE_KEY);
+        const logoImg = document.getElementById("siteLogoImg");
+        const logoIcon = document.getElementById("siteLogoIcon");
+
+        if (savedLogo) {
+            logoImg.src = savedLogo;
+            logoImg.style.display = "block";
+            logoIcon.style.display = "none";
+        } else {
+            logoImg.style.display = "none";
+            logoIcon.style.display = "inline-block";
+        }
+    }
+
+    /* ---------- CATEGORIES ---------- */
+    renderCategories() {
+        const container = document.getElementById("categoriesContainer");
+        container.innerHTML = "";
+        
+        const mainCategories = this.categories.filter(c => !c.parent_id);
+        
+        if (mainCategories.length === 0) {
+            container.innerHTML = '<div class="loading-spinner">دسته‌بندی یافت نشد</div>';
+            return;
+        }
+        
+        mainCategories.forEach(cat => {
+            const el = document.createElement("div");
+            el.className = "category";
+            let bgImgHtml = cat.image ? `<img src="${cat.image}" class="category-bg-img" alt="${cat.title}">` : '';
+            el.innerHTML = `
+                ${bgImgHtml}
+                <div class="category-content">
+                    <div class="category-icon">${cat.icon}</div>
+                    <div class="category-name">${cat.title}</div>
+                </div>
+            `;
+            el.onclick = () => this.openCategory(cat.id, cat.title);
+            container.appendChild(el);
+        });
+    }
+
+    /* ---------- DHIKR ---------- */
+    getDhikrGoal() {
+        const saved = localStorage.getItem(CONFIG.DHIKR_STORAGE_KEY);
+        if (saved) {
+            const goal = JSON.parse(saved);
+            // بررسی رزت روزانه
+            const today = new Date().toDateString();
+            if (goal.lastResetDate !== today) {
+                goal.count = 0;
+                goal.lastResetDate = today;
+                if (goal.currentDay < goal.targetDays) {
+                    goal.currentDay = (goal.currentDay || 1) + 1;
+                }
+                this.saveDhikrGoal(goal);
+            }
+            return goal;
+        }
+        const defaultGoal = {
+            adhkarId: this.adhkar[0]?.id || "1",
+            title: this.adhkar[0]?.title || "ذکر تهلیل",
+            text: this.adhkar[0]?.text || "لا إِلهَ إِلَّا اللَّهُ",
+            count: 0,
+            targetCount: this.adhkar[0]?.default_target || 100,
+            targetDays: 1,
+            currentDay: 1,
+            lastResetDate: new Date().toDateString()
+        };
+        this.saveDhikrGoal(defaultGoal);
+        return defaultGoal;
+    }
+
+    saveDhikrGoal(goal) {
+        localStorage.setItem(CONFIG.DHIKR_STORAGE_KEY, JSON.stringify(goal));
+    }
+
+    checkDailyReset() {
+        const dhikr = this.getDhikrGoal();
+        const today = new Date().toDateString();
+        if (dhikr.lastResetDate !== today) {
+            dhikr.count = 0;
+            dhikr.lastResetDate = today;
+            this.saveDhikrGoal(dhikr);
+        }
+    }
+
+    renderDhikr() {
+        const dhikr = this.getDhikrGoal();
+        document.getElementById("dhikrTitleDisplay").textContent = `✦ ${dhikr.title}`;
+        document.getElementById("dhikrTextDisplay").textContent = dhikr.text;
+        
+        const counterBtn = document.getElementById("counterBtn");
+        counterBtn.textContent = dhikr.count;
+        counterBtn.classList.toggle("completed", dhikr.count >= dhikr.targetCount);
+
+        const progressPct = Math.min(100, Math.round((dhikr.count / dhikr.targetCount) * 100)) || 0;
+        document.getElementById("dhikrProgressBar").style.width = `${progressPct}%`;
+        document.getElementById("dhikrProgressText").textContent = `پیشرفت: ${progressPct}٪`;
+        document.getElementById("dhikrGoalInfo").textContent = `هدف: ${dhikr.targetCount} ذکر در ${dhikr.targetDays} روز`;
+        document.getElementById("dhikrDayCounter").textContent = `روز: ${dhikr.currentDay || 1} از ${dhikr.targetDays}`;
+        document.getElementById("dhikrDailyPace").textContent = `پیشنهاد روزانه: ${Math.ceil(dhikr.targetCount / dhikr.targetDays)}`;
+    }
+
+    incrementDhikr() {
+        const dhikr = this.getDhikrGoal();
+        if (dhikr.count >= dhikr.targetCount) {
+            this.showToast("تعداد ذکر به حد نصاب هدف رسیده است!");
+            return;
+        }
+        dhikr.count++;
+        this.saveDhikrGoal(dhikr);
+        this.renderDhikr();
+        if (dhikr.count >= dhikr.targetCount) {
+            this.showToast("تبریک! هدف ذکر تکمیل شد.");
+        }
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        }
+    }
+
+    openDhikrSelector() {
+        const modal = document.getElementById("appModal");
+        const modalBody = document.getElementById("modalBody");
+        const dhikr = this.getDhikrGoal();
+        
+        const adhkarByCategory = {};
+        this.adhkar.forEach(a => {
+            const cat = a.category || 'general';
+            if (!adhkarByCategory[cat]) adhkarByCategory[cat] = [];
+            adhkarByCategory[cat].push(a);
+        });
+
+        const optionsHtml = Object.entries(adhkarByCategory).map(([cat, items]) => `
+            <optgroup label="${this.getCategoryTitle(cat)}">
+                ${items.map(a => `<option value="${a.id}" ${a.id === dhikr.adhkarId ? 'selected' : ''}>${a.title}</option>`).join('')}
+            </optgroup>
+        `).join('');
+
+        modalBody.innerHTML = `
+            <button class="modal-close-btn" onclick="app.closeModal()">✕</button>
+            <div class="modal-header-title">✦ تنظیم هدف و انتخاب ذکر</div>
+            
+            <label style="font-size:10px; color:var(--muted);">انتخاب ذکر (بر اساس دسته):</label>
+            <select id="selectDhikrItem" class="admin-input" style="background:#12152c;" onchange="app.onDhikrSelectChange(this.value)">
+                ${optionsHtml}
+            </select>
+
+            <label style="font-size:10px; color:var(--muted);">تعداد کل مورد نظر:</label>
+            <input type="number" id="inputTargetCount" class="admin-input" value="${dhikr.targetCount}" min="1">
+
+            <label style="font-size:10px; color:var(--muted);">تعداد روز برای تکمیل:</label>
+            <input type="number" id="inputTargetDays" class="admin-input" value="${dhikr.targetDays}" min="1">
+
+            <button class="admin-btn" onclick="app.saveDhikrGoal()">ثبت و شروع دوره</button>
+            <button class="admin-btn btn-secondary" onclick="app.closeModal()">انصراف</button>
+        `;
+        modal.classList.add("show");
+    }
+
+    getCategoryTitle(catId) {
+        const cat = this.categories.find(c => c.id === catId);
+        return cat ? cat.title : 'عمومی';
+    }
+
+    onDhikrSelectChange(id) {
+        const item = this.adhkar.find(a => a.id === id);
+        if (item) {
+            document.getElementById("inputTargetCount").value = item.default_target;
+            document.getElementById("dhikrTextDisplay").textContent = item.text;
+        }
+    }
+
+    saveDhikrGoal() {
+        const selectedId = document.getElementById("selectDhikrItem").value;
+        const item = this.adhkar.find(a => a.id === selectedId);
+        
+        if (!item) {
+            this.showToast("لطفاً یک ذکر انتخاب کنید");
+            return;
+        }
+        
+        const targetCount = parseInt(document.getElementById("inputTargetCount").value) || item.default_target || 100;
+        const targetDays = parseInt(document.getElementById("inputTargetDays").value) || 1;
+
+        const newGoal = {
+            adhkarId: selectedId,
+            title: item.title,
+            text: item.text,
+            count: 0,
+            targetCount: targetCount,
+            targetDays: targetDays,
+            currentDay: 1,
+            lastResetDate: new Date().toDateString()
+        };
+
+        this.saveDhikrGoal(newGoal);
+        this.renderDhikr();
+        this.closeModal();
+        this.showToast("هدف جدید ذکر با موفقیت تنظیم شد.");
+    }
+
+    promptResetDhikr() {
+        const modal = document.getElementById("appModal");
+        const modalBody = document.getElementById("modalBody");
+        
+        modalBody.innerHTML = `
+            <button class="modal-close-btn" onclick="app.closeModal()">✕</button>
+            <div class="modal-header-title">✦ بازنشانی شمارشگر</div>
+            <p style="font-size:11px; color:var(--muted); text-align:center; line-height:1.8; margin:15px 0 20px;">
+                آیا از صفر کردن تعداد اذکار اطمینان دارید؟
+            </p>
+            <button class="admin-btn btn-danger" onclick="app.confirmResetDhikr()">بله، بازنشانی شود</button>
+            <button class="admin-btn btn-secondary" onclick="app.closeModal()">انصراف</button>
+        `;
+        modal.classList.add("show");
+    }
+
+    confirmResetDhikr() {
+        const dhikr = this.getDhikrGoal();
+        dhikr.count = 0;
+        dhikr.currentDay = 1;
+        dhikr.lastResetDate = new Date().toDateString();
+        this.saveDhikrGoal(dhikr);
+        this.renderDhikr();
+        this.closeModal();
+        this.showToast("شمارشگر صفر شد.");
+    }
+
+    /* ---------- CATEGORY VIEW ---------- */
+    async openCategory(id, title) {
+        const modal = document.getElementById("appModal");
+        const modalBody = document.getElementById("modalBody");
+        
+        if (!this.contents[id]) {
+            this.contents[id] = await ApiService.getContents(id);
+        }
+        
+        const contents = this.contents[id] || [];
+        const subCats = this.categories.filter(c => c.parent_id === id);
+        
+        let subHtml = subCats.length ? `
+            <div style="margin-bottom:15px; display:flex; gap:8px; flex-wrap:wrap;">
+                ${subCats.map(sc => `
+                    <button class="sub-cat-btn" onclick="app.openCategory('${sc.id}', '${sc.title}')">
+                        ${sc.image ? `<img src="${sc.image}" alt="">` : ''}
+                        ${sc.icon} ${sc.title}
+                    </button>
+                `).join('')}
+            </div>
+        ` : '';
+
+        let contentsHtml = contents.length ? contents.map(c => `
+            <div class="content-card">
+                ${c.featured_image ? `<img src="${c.featured_image}" class="content-featured-img" alt="${c.title}">` : ''}
+                <h4>${c.title}</h4>
+                <div class="content-body">${c.content}</div>
+            </div>
+        `).join('') : '<p style="text-align:center; color:var(--muted);">محتوایی یافت نشد</p>';
+
+        modalBody.innerHTML = `
+            <button class="modal-close-btn" onclick="app.closeModal()">✕</button>
+            <div class="modal-header-title">✦ بخش: ${title}</div>
+            ${subHtml}
+            ${contentsHtml}
+        `;
+        modal.classList.add("show");
+    }
+
+    /* ---------- SEARCH ---------- */
+    async handleSearch(query) {
+        if (query.trim().length > 2) {
+            try {
+                const results = await ApiService.getContents(null, query);
+                
+                if (results.length > 0) {
+                    this.showSearchResults(results);
+                } else {
+                    this.showToast("نتیجه‌ای یافت نشد");
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+                this.showToast("خطا در جست‌وجو");
+            }
+        }
+    }
+
+    showSearchResults(results) {
+        const modal = document.getElementById("appModal");
+        const modalBody = document.getElementById("modalBody");
+        
+        const resultsHtml = results.map(r => {
+            const cat = this.categories.find(c => c.id === r.category_id);
+            return `
+                <div class="content-card">
+                    ${r.featured_image ? `<img src="${r.featured_image}" class="content-featured-img" alt="${r.title}">` : ''}
+                    <h4>${r.title} <span style="font-size:9px; color:var(--muted);">(${cat?.title || 'نامشخص'})</span></h4>
+                    <div class="content-body">${r.content}</div>
+                </div>
+            `;
+        }).join('');
+
+        modalBody.innerHTML = `
+            <button class="modal-close-btn" onclick="app.closeModal()">✕</button>
+            <div class="modal-header-title">✦ نتایج جست‌وجو (${results.length} مورد)</div>
+            ${resultsHtml}
+        `;
+        modal.classList.add("show");
+    }
+
+    /* ---------- ADMIN AUTH ---------- */
+    async openAdminAuth() {
+        const modal = document.getElementById("appModal");
+        const modalBody = document.getElementById("modalBody");
+        
+        modalBody.innerHTML = `
+            <button class="modal-close-btn" onclick="app.closeModal()">✕</button>
+            <div class="modal-header-title">✦ ورود به پنل مدیریت</div>
+            <input type="password" id="adminToken" class="admin-input" placeholder="توکن امنیتی را وارد کنید...">
+            <button class="admin-btn" onclick="app.authenticateAdmin()">ورود به پنل</button>
+            <button class="admin-btn btn-secondary" onclick="app.closeModal()">انصراف</button>
+        `;
+        modal.classList.add("show");
+    }
+
+    async authenticateAdmin() {
+        const token = document.getElementById("adminToken").value;
+        if (!token) {
+            this.showToast("توکن را وارد کنید");
+            return;
+        }
+
+        try {
+            const result = await ApiService.verifyAdmin(token);
+            if (result.success) {
+                this.renderAdminPanel();
+                this.showToast("ورود موفق");
+            } else {
+                this.showToast("توکن نامعتبر است");
+            }
+        } catch (error) {
+            this.showToast("خطا در احراز هویت");
+        }
+    }
+
+    /* ---------- ADMIN PANEL ---------- */
+    renderAdminPanel() {
+        const modal = document.getElementById("appModal");
+        const modalBody = document.getElementById("modalBody");
+        const mainCategories = this.categories.filter(c => !c.parent_id);
+        
+        modalBody.innerHTML = `
+            <button class="modal-close-btn" onclick="app.closeModal()">✕</button>
+            <div class="modal-header-title" style="color:var(--cyan);">✦ پنل مدیریت پیشرفته</div>
+            
+            <!-- لوگو -->
+            <div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:18px; margin-bottom:12px; border:1px solid var(--border);">
+                <h5 style="font-size:12px; margin-bottom:10px; color:var(--purple-light);">تغییر لوگوی سایت:</h5>
+                <input type="file" id="logoFileInput" accept="image/*" class="admin-input" onchange="app.uploadLogo(event)">
+                <button class="admin-btn btn-danger" style="margin-top:5px; padding:8px; font-size:10px;" onclick="app.removeLogo()">حذف لوگو</button>
+            </div>
+
+            <!-- مدیریت موضوعات -->
+            <div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:18px; margin-bottom:12px; border:1px solid var(--border);">
+                <h5 style="font-size:12px; margin-bottom:10px; color:var(--purple-light);">مدیریت موضوعات (حذف):</h5>
+                <div style="max-height:200px; overflow-y:auto;">
+                    ${this.categories.map(cat => `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:rgba(255,255,255,0.05); margin-bottom:4px; border-radius:8px;">
+                            <span style="font-size:11px;">${cat.parent_id ? '↳ ' : ''}${cat.icon} ${cat.title}</span>
+                            <button class="delete-btn" onclick="app.deleteCategory('${cat.id}')">حذف</button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <!-- افزودن موضوع -->
+            <div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:18px; margin-bottom:12px; border:1px solid var(--border);">
+                <h5 style="font-size:12px; margin-bottom:10px; color:var(--purple-light);">افزودن موضوع جدید:</h5>
+                <select id="parentCatSelect" class="admin-input" style="background:#12152c;">
+                    <option value="">-- موضوع اصلی --</option>
+                    ${mainCategories.map(c => `<option value="${c.id}">${c.title}</option>`).join('')}
+                </select>
+                <input type="text" id="newCatTitle" class="admin-input" placeholder="عنوان موضوع">
+                <input type="text" id="newCatIcon" class="admin-input" placeholder="آیکون (مثلاً ✦)">
+                <label style="font-size:10px; color:var(--muted);">تصویر پس‌زمینه:</label>
+                <input type="file" accept="image/*" class="admin-input" onchange="app.previewCategoryImage(event)">
+                <img id="catImgPreview" class="img-preview" alt="پیش‌نمایش">
+                <button class="admin-btn" onclick="app.addCategory()">افزودن موضوع</button>
+            </div>
+
+            <!-- مدیریت اذکار -->
+            <div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:18px; margin-bottom:12px; border:1px solid var(--border);">
+                <h5 style="font-size:12px; margin-bottom:10px; color:var(--purple-light);">افزودن ذکر جدید:</h5>
+                <input type="text" id="newDhikrTitle" class="admin-input" placeholder="عنوان ذکر">
+                <input type="text" id="newDhikrText" class="admin-input" placeholder="متن ذکر">
+                <input type="number" id="newDhikrTarget" class="admin-input" placeholder="هدف پیش‌فرض (مثلاً ۱۰۰)">
+                <select id="newDhikrCategory" class="admin-input" style="background:#12152c;">
+                    <option value="general">عمومی</option>
+                    ${this.categories.map(c => `<option value="${c.id}">${c.title}</option>`).join('')}
+                </select>
+                <button class="admin-btn" onclick="app.addAdhkar()">افزودن ذکر</button>
+                
+                <div style="margin-top:10px; max-height:150px; overflow-y:auto;">
+                    ${this.adhkar.map(a => `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:6px; background:rgba(255,255,255,0.05); margin-bottom:4px; border-radius:6px;">
+                            <span style="font-size:10px;">${a.title} <span style="color:var(--muted);">(${this.getCategoryTitle(a.category || 'general')})</span></span>
+                            <button class="delete-btn" onclick="app.deleteAdhkar('${a.id}')">حذف</button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <!-- افزودن محتوا -->
+            <div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:18px; margin-bottom:12px; border:1px solid var(--border);">
+                <h5 style="font-size:12px; margin-bottom:10px; color:var(--purple-light);">افزودن محتوا:</h5>
+                <select id="contentCatSelect" class="admin-input" style="background:#12152c;">
+                    ${this.categories.map(c => `<option value="${c.id}">${c.parent_id ? '↳ ' : ''}${c.title}</option>`).join('')}
+                </select>
+                <input type="text" id="itemTitle" class="admin-input" placeholder="عنوان مطلب">
+                
+                <div class="editor-toolbar">
+                    <button class="editor-btn" onclick="document.execCommand('bold', false, null)"><b>B</b></button>
+                    <button class="editor-btn" onclick="document.execCommand('italic', false, null)"><i>I</i></button>
+                    <button class="editor-btn" onclick="document.execCommand('underline', false, null)"><u>U</u></button>
+                    <input type="color" id="textColorPicker" onchange="document.execCommand('foreColor', false, this.value)" style="width:28px; height:24px; border:none; background:transparent; cursor:pointer;" title="رنگ متن">
+                    
+                    <select id="insertImageSize" style="background:rgba(255,255,255,0.1); border:1px solid var(--border); color:white; padding:4px; border-radius:6px; font-size:10px;">
+                        <option value="small">کوچک</option>
+                        <option value="medium" selected>متوسط</option>
+                        <option value="large">بزرگ</option>
+                        <option value="custom">سفارشی</option>
+                    </select>
+                    <input type="file" id="inlineImageFile" accept="image/*" style="display:none;" onchange="app.insertInlineImage(event)">
+                    <button class="editor-btn" onclick="document.getElementById('inlineImageFile').click()">📷 تصویر</button>
+                    
+                    <button class="editor-btn" onclick="app.insertDhikrBox()">📿 ذکر</button>
+                    <button class="editor-btn" onclick="app.insertAyahBox()">📖 آیه</button>
+                </div>
+                
+                <div id="editorArea" class="editor-box" contenteditable="true"></div>
+                
+                <label style="font-size:10px; color:var(--muted);">تصویر اصلی مطلب:</label>
+                <input type="file" id="featuredImage" accept="image/*" class="admin-input" onchange="app.previewFeaturedImage(event)">
+                <img id="featuredImgPreview" class="img-preview" alt="پیش‌نمایش تصویر اصلی">
+                
+                <button class="admin-btn" onclick="app.saveContent()">ذخیره محتوا</button>
+            </div>
+
+            <!-- مدیریت محتواها -->
+            <div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:18px; margin-bottom:12px; border:1px solid var(--border);">
+                <h5 style="font-size:12px; margin-bottom:10px; color:var(--purple-light);">مدیریت محتواها (حذف):</h5>
+                <div style="max-height:250px; overflow-y:auto;" id="allContentsList">
+                    ${this.getAllContentsHtml()}
+                </div>
+            </div>
+
+            <button class="admin-btn btn-secondary" style="margin-top:12px;" onclick="app.closeModal()">خروج از مدیریت</button>
+        `;
+        modal.classList.add("show");
+    }
+
+    getAllContentsHtml() {
+        const allContents = [];
+        Object.entries(this.contents).forEach(([catId, items]) => {
+            items.forEach(item => {
+                const cat = this.categories.find(c => c.id === catId);
+                allContents.push({ ...item, catId, catTitle: cat?.title || 'نامشخص' });
+            });
+        });
+        
+        return allContents.length ? allContents.map(c => `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:rgba(255,255,255,0.05); margin-bottom:4px; border-radius:8px;">
+                <span style="font-size:10px;">${c.title} <span style="color:var(--muted);">(${c.catTitle})</span></span>
+                <button class="delete-btn" onclick="app.deleteContent('${c.id}')">حذف</button>
+            </div>
+        `).join('') : '<p style="font-size:10px; color:var(--muted); text-align:center;">محتوایی وجود ندارد</p>';
+    }
+
+    /* ---------- ADMIN FUNCTIONS ---------- */
+    uploadLogo(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                localStorage.setItem(CONFIG.LOGO_STORAGE_KEY, e.target.result);
+                this.renderLogo();
+                this.showToast("لوگوی جدید اعمال شد.");
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    removeLogo() {
+        localStorage.removeItem(CONFIG.LOGO_STORAGE_KEY);
+        this.renderLogo();
+        this.showToast("لوگو حذف شد.");
+    }
+
+    async deleteCategory(categoryId) {
+        if (confirm('آیا از حذف این موضوع و همه زیرمجموعه‌ها و محتواهایش مطمئن هستید؟')) {
+            try {
+                await ApiService.deleteCategory(categoryId);
+                delete this.contents[categoryId];
+                await this.loadData();
+                this.renderAdminPanel();
+                this.showToast("موضوع حذف شد");
+            } catch (error) {
+                this.showToast("خطا در حذف موضوع");
+            }
+        }
+    }
+
+    previewCategoryImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.categoryImage = e.target.result;
+                const imgEl = document.getElementById("catImgPreview");
+                imgEl.src = e.target.result;
+                imgEl.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    async addCategory() {
+        const title = document.getElementById("newCatTitle").value;
+        const parentId = document.getElementById("parentCatSelect").value || null;
+        const icon = document.getElementById("newCatIcon").value || "✦";
+        
+        if (!title) {
+            this.showToast("عنوان را وارد کنید");
+            return;
+        }
+
+        try {
+            await ApiService.addCategory({
+                parent_id: parentId,
+                title,
+                icon,
+                image: this.categoryImage || ""
+            });
+            
+            this.categoryImage = null;
+            await this.loadData();
+            this.renderAdminPanel();
+            this.showToast("موضوع اضافه شد");
+        } catch (error) {
+            this.showToast("خطا در افزودن موضوع");
+        }
+    }
+
+    async addAdhkar() {
+        const title = document.getElementById("newDhikrTitle").value;
+        const text = document.getElementById("newDhikrText").value;
+        const defaultTarget = parseInt(document.getElementById("newDhikrTarget").value) || 100;
+        const category = document.getElementById("newDhikrCategory").value;
+
+        if (!title || !text) {
+            this.showToast("عنوان و متن ذکر را وارد کنید");
+            return;
+        }
+
+        try {
+            await ApiService.addAdhkar({
+                title,
+                text,
+                default_target: defaultTarget,
+                category: category
+            });
+
+            await this.loadData();
+            this.renderAdminPanel();
+            this.showToast("ذکر جدید اضافه شد");
+        } catch (error) {
+            this.showToast("خطا در افزودن ذکر");
+        }
+    }
+
+    async deleteAdhkar(adhkarId) {
+        if (confirm('آیا از حذف این ذکر مطمئن هستید؟')) {
+            try {
+                await ApiService.deleteAdhkar(adhkarId);
+                await this.loadData();
+                this.renderAdminPanel();
+                this.showToast("ذکر حذف شد");
+            } catch (error) {
+                this.showToast("خطا در حذف ذکر");
+            }
+        }
+    }
+
+    insertInlineImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const size = document.getElementById("insertImageSize").value;
+            let width = "100%";
+            
+            switch(size) {
+                case 'small': width = "150px"; break;
+                case 'medium': width = "300px"; break;
+                case 'large': width = "100%"; break;
+                case 'custom': width = prompt("عرض تصویر را وارد کنید (مثلاً 200px یا 50%):", "300px") || "300px"; break;
+            }
+            
+            const imgHtml = `<img src="${e.target.result}" style="width:${width}; height:auto; display:block; margin:10px auto; border-radius:8px;" />`;
+            document.execCommand('insertHTML', false, imgHtml);
+        };
+        reader.readAsDataURL(file);
+        event.target.value = '';
+    }
+
+    insertDhikrBox() {
+        const dhikrText = prompt("متن ذکر را وارد کنید:", "لا إِلهَ إِلَّا اللَّهُ");
+        if (dhikrText) {
+            const boxHtml = `<div class="dhikr-box">${dhikrText}</div>`;
+            document.execCommand('insertHTML', false, boxHtml);
+        }
+    }
+
+    insertAyahBox() {
+        const ayahText = prompt("متن آیه را وارد کنید:", "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ");
+        if (ayahText) {
+            const boxHtml = `<div class="dhikr-box" style="border-color: rgba(255,215,0,0.5); color: #FFD700;">${ayahText}</div>`;
+            document.execCommand('insertHTML', false, boxHtml);
+        }
+    }
+
+    previewFeaturedImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.featuredImage = e.target.result;
+                const imgEl = document.getElementById("featuredImgPreview");
+                imgEl.src = e.target.result;
+                imgEl.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    async saveContent() {
+        const categoryId = document.getElementById("contentCatSelect").value;
+        const title = document.getElementById("itemTitle").value;
+        const content = document.getElementById("editorArea").innerHTML;
+        
+        if (!title || !content) {
+            this.showToast("عنوان و محتوا را وارد کنید");
+            return;
+        }
+
+        try {
+            await ApiService.addContent({
+                category_id: categoryId,
+                title,
+                content,
+                featured_image: this.featuredImage || ""
+            });
+
+            this.featuredImage = null;
+            delete this.contents[categoryId];
+            await this.loadData();
+            this.closeModal();
+            this.showToast("محتوا ذخیره شد");
+        } catch (error) {
+            this.showToast("خطا در ذخیره محتوا");
+        }
+    }
+
+    async deleteContent(contentId) {
+        if (confirm('آیا از حذف این محتوا مطمئن هستید؟')) {
+            try {
+                await ApiService.deleteContent(contentId);
+                await this.loadData();
+                this.renderAdminPanel();
+                this.showToast("محتوا حذف شد");
+            } catch (error) {
+                this.showToast("خطا در حذف محتوا");
+            }
+        }
+    }
+
+    /* ---------- NAVIGATION ---------- */
+    switchTab(e, tab) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        if (e && e.currentTarget) {
+            e.currentTarget.classList.add('active');
+        }
+        
+        const tabMap = {
+            'home': null,
+            'quotes': 'quotes',
+            'adhkar': 'adhkar',
+            'concepts': 'concepts'
+        };
+        
+        if (tabMap[tab]) {
+            const category = this.categories.find(c => c.id === tabMap[tab]);
+            if (category) {
+                this.openCategory(tabMap[tab], category.title);
+            }
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    /* ---------- UI HELPERS ---------- */
+    showToast(msg) {
+        const toast = document.getElementById("toast");
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    closeModal() {
+        document.getElementById("appModal").classList.remove("show");
+    }
+
+    /* ---------- EVENT LISTENERS ---------- */
+    setupEventListeners() {
+        document.getElementById("counterBtn").addEventListener("click", () => this.incrementDhikr());
+        document.getElementById("changeDhikrBtn").addEventListener("click", () => this.openDhikrSelector());
+        document.getElementById("resetDhikrBtn").addEventListener("click", () => this.promptResetDhikr());
+        document.getElementById("searchInput").addEventListener("input", (e) => this.handleSearch(e.target.value));
+        
+        let clickCount = 0;
+        let clickTimer = null;
+        const secretTrigger = () => {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 4000);
+            if (clickCount >= 25) {
+                clickCount = 0;
+                this.openAdminAuth();
+            }
+        };
+        
+        document.getElementById("siteLogoContainer").addEventListener("click", secretTrigger);
+        document.getElementById("planetOrbit").addEventListener("click", secretTrigger);
+        
+        document.getElementById("appModal").addEventListener("click", (e) => {
+            if (e.target.id === "appModal") {
+                this.closeModal();
+            }
+        });
+    }
+}
+
+/* =========================================================
+   INITIALIZATION========================================================= */
+const app = new App();
+</script>
+</body>
+</html>
